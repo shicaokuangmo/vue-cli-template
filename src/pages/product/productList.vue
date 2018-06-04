@@ -137,12 +137,12 @@ export default {
       }
 
       // 提示框接口
-      let queryStringFun = async (queryString, cb) => {
-        let { data } = await testAPIs.test({ queryString: queryString })
-        // ...此处二次组织cb回调函数的数据结构
-        let datalist = productListService().getQueryStringData(data.result)
-        cb(datalist)
-      }
+      // let queryStringFun = async (queryString, cb) => {
+      //   let { data } = await testAPIs.test({ queryString: queryString })
+      //   // ...此处二次组织cb回调函数的数据结构
+      //   let datalist = productListService().getQueryStringData(data.result)
+      //   cb(datalist)
+      // }
 
       // 提示框选择事件
       let handleSelectFun = () => {
@@ -164,7 +164,6 @@ export default {
         toShopCartFun: toShopCartFun,
         handleSelectionChangeFun: handleSelectionChangeFun,
         formatter: formatter,
-        queryStringFun,
         handleSelectFun
       })
     }

@@ -16,11 +16,11 @@ class UserListService extends commonService {
   }
   getUserList ({ keyword, pageNo, pageSize, total }, viewModel = 'userlist') {
     testAPIs.test({})
-      .then(res => {
+      .then(({ status, data }) => {
         this.bus.$emit('events', {
           type: 'getUserList',
-          data: this._getModel(viewModel, res.data),
-          code: res.code
+          data: this._getModel(viewModel, data.result),
+          code: status
         })
       })
   }

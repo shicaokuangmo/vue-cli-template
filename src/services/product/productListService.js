@@ -16,11 +16,11 @@ class ProductListService extends commonService {
   }
   getProductList ({ keyword, pageNo, pageSize, total }, viewModel = 'productlist') {
     testAPIs.test({})
-      .then(res => {
+      .then(({ status, data }) => {
         this.bus.$emit('events', {
           type: 'getProductList',
-          data: this._getModel(viewModel, res.data),
-          code: res.code
+          data: this._getModel(viewModel, data.result),
+          code: status
         })
       })
   }

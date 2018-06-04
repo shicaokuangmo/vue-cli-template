@@ -38,6 +38,7 @@ export default {
     userListService().listener('events', ({ type, data, code }) => {
       if (type === 'getUserList') {
         // 接口返回之后，利用事件代理自定义处理逻辑
+        debugger
       }
     })
   },
@@ -100,12 +101,12 @@ export default {
       }
 
       // 提示框接口
-      let queryStringFun = async (queryString, cb) => {
-        let { data } = await testAPIs.test({ queryString: queryString })
-        // ...此处二次组织cb回调函数的数据结构
-        let datalist = userListService().getQueryStringData(data.result)
-        cb(datalist)
-      }
+      // let queryStringFun = async (queryString, cb) => {
+      //   let { data } = await testAPIs.test({ queryString: queryString })
+      //   // ...此处二次组织cb回调函数的数据结构
+      //   let datalist = userListService().getQueryStringData(data.result)
+      //   cb(datalist)
+      // }
 
       // 提示框选择事件
       let handleSelectFun = () => {
@@ -122,7 +123,6 @@ export default {
         handleSizeChangeFun: handleSizeChangeFun,
         handleCurrentChangeFun: handleCurrentChangeFun,
         handleSelectionChangeFun: handleSelectionChangeFun,
-        queryStringFun,
         handleSelectFun
       })
     }

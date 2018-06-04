@@ -12,8 +12,7 @@
 </template>
 <script>
 // js文件小驼峰
-import testAPIs from '../../api/test/testAPIs'
-import userListService from './service/userListService'
+import userListService from 'services/user/userListService'
 
 // Vue组件大驼峰
 import MTable from '@/components/table/Table.vue'
@@ -25,6 +24,9 @@ export default {
   },
   data () {
     return {
+      // 数据
+      userlist: [],
+      // 表格配置
       tableOptions: {
         handleSelectionChange (rows) {
         },
@@ -32,49 +34,64 @@ export default {
       }
     }
   },
-  mounted: async function () {
+  created () {
+    userListService().listener('events', ({ type, data, code }) => {
+      if (type === 'getUserList') {
+        // 接口返回之后，利用事件代理自定义处理逻辑
+      }
+    })
+  },
+  mounted () {
     let vm = this
     let pageNo = 1
     let pageSize = 10
     let total = 400
 
-    let { data } = await testAPIs.test({})
-    vm.initTable(data.result, pageNo, pageSize, total)
+    // 获取数据
+    userListService().getUserList({
+      keyword: '',
+      pageNo,
+      pageSize,
+      total
+    })
+    vm.initTable(pageNo, pageSize, total)
   },
   methods: {
-    initTable (dataList, pageNo, pageSize, total) {
-      //        console.log(dataList)
+    initTable (pageNo, pageSize, total) {
       let vm = this
 
       // 查询
-      let searchFun = async () => {
+      let searchFun = () => {
         let keyword = vm.$refs.myTable.getRefs('keyword').$refs.input.value
-        let {data} = await testAPIs.test({
-          keyword: keyword,
+        // 获取数据
+        userListService().getUserList({
+          keyword,
           pageNo: vm.tableOptions.pageInfo.currentPage = 1,
-          pageSize: vm.tableOptions.pageInfo.pageSize
+          pageSize: vm.tableOptions.pageInfo.pageSize,
+          total
         })
-        vm.tableOptions.data = data.result
       }
 
       // 改变pageSize事件
-      let handleSizeChangeFun = async (val) => {
-        vm.tableOptions.pageInfo.pageSize = val
-        let {data} = await testAPIs.test({
+      let handleSizeChangeFun = (val) => {
+        // 获取数据
+        userListService().getUserList({
+          keyword: '',
           pageNo: vm.tableOptions.pageInfo.currentPage,
-          pageSize: vm.tableOptions.pageInfo.pageSize
+          pageSize: vm.tableOptions.pageInfo.pageSize = val,
+          total
         })
-        vm.tableOptions.data = data.result
       }
 
       // 改变currentPage事件
-      let handleCurrentChangeFun = async (val) => {
-        vm.tableOptions.pageInfo.currentPage = val
-        let {data} = await testAPIs.test({
-          pageNo: vm.tableOptions.pageInfo.currentPage,
-          pageSize: vm.tableOptions.pageInfo.pageSize
+      let handleCurrentChangeFun = (val) => {
+        // 获取数据
+        userListService().getUserList({
+          keyword: '',
+          pageNo: vm.tableOptions.pageInfo.currentPage = val,
+          pageSize: vm.tableOptions.pageInfo.pageSize,
+          total
         })
-        vm.tableOptions.data = data.result
       }
 
       // 选中行事件
@@ -96,7 +113,7 @@ export default {
       }
 
       vm.tableOptions = userListService({
-        dataList: dataList,
+        dataList: vm.userlist,
         pageNo: pageNo,
         pageSize: pageSize,
         total: total

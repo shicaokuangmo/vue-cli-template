@@ -1,19 +1,23 @@
 /**
  * 作者 ：食草狂魔
  *
- * 日期 ：2018/3/27
+ * 日期 ：2018/3/15
  *
- * 描述 ：userListService
+ * 描述 ：shopCartService
  */
 'use strict' // 定义为严格模式编码要求
-import commonService from '../../commonService'
+import commonService from 'services/commonService'
 
-class UserListService extends commonService {
+class ShopCartService extends commonService {
   constructor (data) {
     super()
     this.data = data
   }
-  getTableOptions ({ searchFun, handleSizeChangeFun, handleCurrentChangeFun, handleSelectionChangeFun, queryStringFun, handleSelectFun }) {
+  getTableOptions ({
+    removeAllFun,
+    rowDeleteFun,
+    handleSelectionChangeFun
+  }) {
     let self = this
     let options = {
       thead: [{
@@ -45,41 +49,30 @@ class UserListService extends commonService {
         label: '创建时间', // 显示的标题
         width: '180' // 列宽
       }],
-      data: self.data.dataList,
-      pageInfo: {
-        currentPage: self.data.pageNo,
-        pageSizes: [1, 2, 3, 4],
-        pageSize: self.data.pageSize,
-        layout: 'total, sizes, prev, pager, next, jumper',
-        total: self.data.total,
-        handleSizeChange: handleSizeChangeFun,
-        handleCurrentChange: handleCurrentChangeFun
+      operation: {
+        items: [{
+          xtype: 'link', // commonButton
+          buttonText: '移除',
+          onClick: rowDeleteFun
+        }]
       },
+      data: self.data.dataList,
       toolbar: [{
         xtype: 'toolbarRow',
         items: [{
           xtype: 'button',
           buttonType: 'primary', // 按钮样式
-          buttonText: '查询',
+          buttonText: '清空购物车',
           containerStyle: 'float:right',
-          onClick: searchFun
-        }, {
-          xtype: 'autocomplete',
-          defaultText: '请输入查找的内容',
-          containerStyle: 'float:right',
-          ref: 'keyword',
-          triggerOnFocus: false,
-          querySearch: queryStringFun,
-          handleSelect: handleSelectFun
+          onClick: removeAllFun
         }]
       }],
       handleSelectionChange: handleSelectionChangeFun
     }
-
     return options
   }
 }
 
 export default (data) => {
-  return new UserListService(data)
+  return new ShopCartService(data)
 }

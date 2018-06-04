@@ -8,6 +8,16 @@
 class CommonService {
   constructor (data) {
     this.data = data
+    this.bus = window.Bus
+  }
+  _getModel (viewModel, data) {
+    // 私有函数 - 组织视图模型与数据的映射关系
+    let model = {}
+    model[viewModel] = data
+    return model
+  }
+  listener (eventName, callback) {
+    this.bus.$on(eventName, callback)
   }
   getQueryStringData (datalist) {
     datalist.map(item => {

@@ -12,8 +12,7 @@
 </template>
 <script>
 // js文件小驼峰
-import testAPIs from '../../api/test/testAPIs'
-import productListService from './service/productListService'
+import productListService from 'services/product/productListService'
 
 // Vue组件大驼峰
 import MTable from '@/components/table/Table.vue'
@@ -25,6 +24,9 @@ export default {
   },
   data () {
     return {
+      // 数据
+      productlist: [],
+      // 表格配置
       tableOptions: {
         handleSelectionChange (rows) {
         },
@@ -32,26 +34,45 @@ export default {
       }
     }
   },
-  mounted: async function () {
+  created () {
+    productListService().listener('events', ({ type, data, code }) => {
+      if (type === 'getProductList') {
+        // 接口返回之后，利用事件代理自定义处理逻辑
+      }
+    })
+  },
+  mounted () {
     let vm = this
     let pageNo = 1
     let pageSize = 10
     let total = 400
 
-    let { data } = await testAPIs.test({})
-    vm.initTable(data.result, pageNo, pageSize, total)
+    // 获取数据
+    productListService().getProductList({
+      keyword: '',
+      pageNo,
+      pageSize,
+      total
+    })
+
+    vm.initTable(pageNo, pageSize, total)
   },
   methods: {
-    initTable (dataList, pageNo, pageSize, total) {
+    initTable (pageNo, pageSize, total) {
       //        console.log(dataList)
       let vm = this
       let vuex = vm.$store.state.productStore.shopCartStore
 
       // 查询
-      let searchFun = async () => {
+      let searchFun = () => {
         let keyword = vm.$refs.myTable.getRefs('keyword').$refs.input.value
-        let { data } = await testAPIs.test({ keyword: keyword, pageNo: vm.tableOptions.pageInfo.currentPage = 1, pageSize: vm.tableOptions.pageInfo.pageSize })
-        vm.tableOptions.data = data.result
+        // 获取数据
+        productListService().getProductList({
+          keyword,
+          pageNo: vm.tableOptions.pageInfo.currentPage = 1,
+          pageSize: vm.tableOptions.pageInfo.pageSize,
+          total
+        })
       }
 
       // 加入购物车
@@ -72,17 +93,25 @@ export default {
       }
 
       // 改变pageSize事件
-      let handleSizeChangeFun = async (val) => {
-        vm.tableOptions.pageInfo.pageSize = val
-        let { data } = await testAPIs.test({ pageNo: vm.tableOptions.pageInfo.currentPage, pageSize: vm.tableOptions.pageInfo.pageSize })
-        vm.tableOptions.data = data.result
+      let handleSizeChangeFun = (val) => {
+        // 获取数据
+        productListService().getProductList({
+          keyword: '',
+          pageNo: vm.tableOptions.pageInfo.currentPage,
+          pageSize: vm.tableOptions.pageInfo.pageSize = val,
+          total
+        })
       }
 
       // 改变currentPage事件
-      let handleCurrentChangeFun = async (val) => {
-        vm.tableOptions.pageInfo.currentPage = val
-        let { data } = await testAPIs.test({ pageNo: vm.tableOptions.pageInfo.currentPage, pageSize: vm.tableOptions.pageInfo.pageSize })
-        vm.tableOptions.data = data.result
+      let handleCurrentChangeFun = (val) => {
+        // 获取数据
+        productListService().getProductList({
+          keyword: '',
+          pageNo: vm.tableOptions.pageInfo.currentPage = val,
+          pageSize: vm.tableOptions.pageInfo.pageSize,
+          total
+        })
       }
 
       // 去购物车
@@ -121,7 +150,7 @@ export default {
       }
 
       vm.tableOptions = productListService({
-        dataList: dataList,
+        dataList: vm.productlist,
         pageNo: pageNo,
         pageSize: pageSize,
         total: total

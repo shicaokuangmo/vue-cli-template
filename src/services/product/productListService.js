@@ -6,12 +6,23 @@
  * 描述 ：业务逻辑层 - 产品列表
  */
 'use strict' // 定义为严格模式编码要求
-import commonService from '../../commonService'
+import testAPIs from 'api/test/testAPIs'
+import commonService from 'services/commonService'
 
 class ProductListService extends commonService {
   constructor (data) {
     super()
     this.data = data
+  }
+  getProductList ({ keyword, pageNo, pageSize, total }, viewModel = 'productlist') {
+    testAPIs.test({})
+      .then(res => {
+        this.bus.$emit('events', {
+          type: 'getProductList',
+          data: this._getModel(viewModel, res.data),
+          code: res.code
+        })
+      })
   }
   getTableOptions ({ searchFun, addCartFun, rowDeleteFun, resetPwdFun, handleSizeChangeFun, handleCurrentChangeFun, toShopCartFun, handleSelectionChangeFun, formatter, queryStringFun, handleSelectFun }) {
     let self = this

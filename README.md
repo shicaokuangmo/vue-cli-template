@@ -15,3 +15,7 @@
                加入standard风格代码规范验证   外网地址：https://github.com/standard/standard/blob/master/docs/RULES-zhcn.md    内网地址：http://192.168.0.115/webgf.htm
                加入eslint-plugin-vuefix自动修复vue代码规范错误
                加入命令 npm run lint 自动修复简单的代码规范问题
+# 2018/06/04   v1.2.3
+               修改services层解藕是图层与接口层
+               加入window.Bus监听接口回调, 辅助完成页面数据绑定
+               所有接口返回的数据自动绑定到视图层

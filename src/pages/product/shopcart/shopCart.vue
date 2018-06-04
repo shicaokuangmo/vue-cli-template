@@ -13,7 +13,7 @@
 </template>
 <script>
 // js文件小驼峰
-import shopCartService from './service/shopCartService'
+import shopCartService from 'services/product/shopcart/shopCartService'
 
 // Vue组件大驼峰
 import MTable from '@/components/table/Table.vue'
@@ -32,7 +32,7 @@ export default {
       }
     }
   },
-  mounted: function () {
+  mounted () {
     let vm = this
     let vuex = vm.$store.state.productStore.shopCartStore
 

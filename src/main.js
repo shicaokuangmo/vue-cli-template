@@ -22,6 +22,16 @@ import moment from 'moment'
 import '../static/js/lib/ueditor/ueditor.config.js'
 import '../static/js/lib/ueditor/ueditor.all.js'
 import '../static/js/lib/ueditor/lang/zh-cn/zh-cn.js'
+
+// 全局混入接口监听事件
+import events from 'mixins/events'
+
+// 生成事件总线
+window.Bus = new Vue()
+
+// 全局混入bus监听
+Vue.mixin(events)
+
 Vue.use(ElementUI)
 Vue.use(VueAwesomeSwiper)
 moment.locale('zh-cn')
